@@ -10,3 +10,4 @@ export * from "./category.type";
 export * from "./disputesReports.type";
 export * from "./feedback.type";
 export * from "./profile.type";
+export * from "./support.type";

@@ -13,7 +13,6 @@ import ProfileSettingsPage from "@/pages/ProfileSettings/ProfileSettingsPage";
 import {
   LayoutGrid,
   Users,
-  ShieldCheck,
   Store,
   Wallet,
   BadgePercent,
