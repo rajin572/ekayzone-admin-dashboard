@@ -13,7 +13,9 @@ interface ReusableSheetProps {
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     trigger?: React.ReactNode;
-    title: string;
+    title: React.ReactNode;
+    /** Overrides the default bold brand-green title color, e.g. "text-base-color" */
+    titleClassName?: string;
     description?: string;
     children: React.ReactNode;
     footer?: React.ReactNode;
@@ -26,6 +28,7 @@ function ReusableSheet({
     onOpenChange,
     trigger,
     title,
+    titleClassName,
     description,
     children,
     footer,
@@ -38,7 +41,7 @@ function ReusableSheet({
 
             <SheetContent side={side} className={`${width} flex flex-col p-0`}>
                 <SheetHeader className="px-6 pt-6 pb-4 border-b border-border">
-                    <SheetTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-secondary-color!">
+                    <SheetTitle className={`text-lg sm:text-xl lg:text-2xl font-bold ${titleClassName ?? "text-secondary-color!"}`}>
                         {title}
                     </SheetTitle>
                     {description && (
