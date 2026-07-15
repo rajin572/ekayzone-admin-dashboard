@@ -11,11 +11,20 @@ interface ReuseTabsProps {
   value: string;
   onChange: (value: string) => void;
   className?: string;
+  /** "default" = grouped grey pill container; "solid" = independent pills, brand-green when active */
+  variant?: "default" | "solid";
 }
 
-const ReuseTabs: React.FC<ReuseTabsProps> = ({ options, value, onChange, className }) => {
+const ReuseTabs: React.FC<ReuseTabsProps> = ({ options, value, onChange, className, variant = "default" }) => {
   return (
-    <div className={cn("inline-flex items-center gap-1 rounded-full bg-background-color p-1", className)}>
+    <div
+      className={cn(
+        "inline-flex items-center gap-1",
+        variant === "default" && "rounded-full bg-background-color p-1",
+        variant === "solid" && "gap-2",
+        className
+      )}
+    >
       {options.map((option) => (
         <button
           key={option.value}
@@ -23,9 +32,14 @@ const ReuseTabs: React.FC<ReuseTabsProps> = ({ options, value, onChange, classNa
           onClick={() => onChange(option.value)}
           className={cn(
             "flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition-colors cursor-pointer",
-            value === option.value
-              ? "bg-primary-color text-base-color shadow-sm"
-              : "text-secondbase-color hover:text-base-color"
+            variant === "default" &&
+              (value === option.value
+                ? "bg-primary-color text-base-color shadow-sm"
+                : "text-secondbase-color hover:text-base-color"),
+            variant === "solid" &&
+              (value === option.value
+                ? "bg-secondary-color text-white"
+                : "bg-white border border-border text-base-color hover:bg-muted")
           )}
         >
           {option.label}
