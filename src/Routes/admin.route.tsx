@@ -1,6 +1,5 @@
 import OverviewPage from "@/pages/Overview/Overview";
 import UserManagementPage from "@/pages/UserManagement/UserManagementPage";
-import ContentModerationPage from "@/pages/ContentModeration/ContentModerationPage";
 import MarketplacePage from "@/pages/Marketplace/MarketplacePage";
 import RevenuePage from "@/pages/Revenue/RevenuePage";
 import PromotionsPage from "@/pages/Promotions/PromotionsPage";
@@ -41,12 +40,6 @@ export const adminRoutes = [
         url: "user-management",
         icon: Users,
         element: <UserManagementPage />,
-      },
-      {
-        title: "Content Moderation",
-        url: "content-moderation",
-        icon: ShieldCheck,
-        element: <ContentModerationPage />,
       },
       {
         title: "Marketplace",
