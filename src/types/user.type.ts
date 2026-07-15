@@ -1,20 +1,24 @@
 import { IMeta } from "./common.type";
 
-export type UserStatus = "active" | "suspended" | "banned";
+export type UserPlan = "Free" | "Premium" | "Pro";
+export type UserStatus = "Active" | "Suspended" | "Banned";
 
 export interface IPlatformUser {
   _id: string;
-  userCode: string;
+  displayId: string;
   fullName: string;
   email: string;
+  gender: string;
   phone: string;
-  country: string;
+  age: number;
+  plan: UserPlan;
   status: UserStatus;
-  isVerified: boolean;
-  totalBookings: number;
-  totalSpent: number;
-  lastActiveLabel: string;
-  joinedAt: string;
+  username: string;
+  avatar?: string;
+  joinDate: string;
+  followers: number;
+  following: number;
+  activeCampaigns: number;
 }
 
 export interface IGetUsersResponse {

@@ -1,3 +1,5 @@
+import { IPlatformUser } from "./user.type";
+
 export interface IOverviewStats {
   totalUsers: number;
   activeToday: number;
@@ -19,32 +21,11 @@ export interface IEarningOverviewPoint {
   earnings: number;
 }
 
-export type RecentUserPlan = "Free" | "Premium" | "Pro";
-export type RecentUserStatus = "Active" | "Suspended" | "Banned";
-
-export interface IRecentUser {
-  _id: string;
-  displayId: string;
-  fullName: string;
-  email: string;
-  gender: string;
-  phone: string;
-  age: number;
-  plan: RecentUserPlan;
-  status: RecentUserStatus;
-  username: string;
-  avatar?: string;
-  joinDate: string;
-  followers: number;
-  following: number;
-  activeCampaigns: number;
-}
-
 export interface IOverviewData {
   stats: IOverviewStats;
   userOverview: IUserOverviewPoint[];
   earningOverview: IEarningOverviewPoint[];
-  recentUsers: IRecentUser[];
+  recentUsers: IPlatformUser[];
 }
 
 export interface IGetOverviewResponse {

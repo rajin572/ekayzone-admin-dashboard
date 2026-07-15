@@ -7,7 +7,7 @@ import OverviewStatCards from "@/Components/Dashboard/Overview/OverviewStatCards
 import UserOverviewAreaChart from "@/Components/Charts/UserOverviewAreaChart";
 import EarningOverviewBarChart from "@/Components/Charts/EarningOverviewBarChart";
 import RecentUserDetailModal from "@/Components/Dashboard/Overview/RecentUserDetailModal";
-import { IOverviewData, IRecentUser } from "@/types";
+import { IOverviewData, IPlatformUser } from "@/types";
 // import { useGetDashboardOverviewQuery, useGetEarningOverviewQuery } from "@/redux/features/dashboard/dashboardApi";
 // import { useSuspendUserMutation } from "@/redux/features/user/userApi";
 // import tryCatchWrapper from "@/utils/tryCatchWrapper";
@@ -70,7 +70,7 @@ const OverviewPage = () => {
   const currentYear = new Date().getFullYear();
   const [earningYear, setEarningYear] = useState(currentYear);
   console.log("Earning Year:", earningYear)
-  const [selectedUser, setSelectedUser] = useState<IRecentUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<IPlatformUser | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isSuspendConfirmOpen, setIsSuspendConfirmOpen] = useState(false);
 
@@ -83,14 +83,14 @@ const OverviewPage = () => {
   // const earningOverview = earningData?.data ?? overview.earningOverview;
   const earningOverview = overview.earningOverview;
 
-  const handleSuspendClick = (user: IRecentUser) => {
+  const handleSuspendClick = (user: IPlatformUser) => {
     setSelectedUser(user);
     setIsDetailOpen(false);
     setIsSuspendConfirmOpen(true);
   };
 
   // const [suspendUser] = useSuspendUserMutation();
-  const handleConfirmSuspend = async (_user: IRecentUser, _reason?: string) => {
+  const handleConfirmSuspend = async (_user: IPlatformUser, _reason?: string) => {
     // const res = await tryCatchWrapper(
     //   suspendUser,
     //   { params: { id: _user._id }, body: { reason: _reason } },
@@ -100,7 +100,7 @@ const OverviewPage = () => {
     setIsSuspendConfirmOpen(false);
   };
 
-  const columns: Column<IRecentUser>[] = [
+  const columns: Column<IPlatformUser>[] = [
     { header: "ID", accessorKey: "displayId", headerClassName: headerCls, cellClassName: cellCls },
     { header: "Full Name", accessorKey: "fullName", headerClassName: headerCls, cellClassName: cellCls },
     { header: "Email", accessorKey: "email", headerClassName: headerCls, cellClassName: cellCls },
@@ -161,7 +161,7 @@ const OverviewPage = () => {
         onSuspend={handleSuspendClick}
       />
 
-      <ConfirmModal<IRecentUser>
+      <ConfirmModal<IPlatformUser>
         open={isSuspendConfirmOpen}
         onCancel={() => setIsSuspendConfirmOpen(false)}
         currentRecord={selectedUser}

@@ -3,13 +3,13 @@ import ReusableModal from "@/Components/ui/CustomUi/ReuseableModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { getAvatar } from "@/utils/getAvatar";
 import { getImageUrl } from "@/helpers/config/envConfig";
-import { IRecentUser } from "@/types";
+import { IPlatformUser } from "@/types";
 
 interface RecentUserDetailModalProps {
   open: boolean;
   onClose: () => void;
-  user: IRecentUser | null;
-  onSuspend: (user: IRecentUser) => void;
+  user: IPlatformUser | null;
+  onSuspend: (user: IPlatformUser) => void;
 }
 
 const InfoRow = ({ label, value }: { label: string; value: React.ReactNode }) => (

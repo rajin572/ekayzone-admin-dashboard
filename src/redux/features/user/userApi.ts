@@ -7,15 +7,16 @@ interface GetUsersArgs {
   limit?: number;
   searchParams?: string;
   status?: string;
+  type?: string;
 }
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query<IGetUsersResponse, GetUsersArgs>({
-      query: ({ page, limit, searchParams, status }) => ({
+      query: ({ page, limit, searchParams, status, type }) => ({
         url: "/admin/users",
         method: "GET",
-        params: { page, limit, searchParams, status },
+        params: { page, limit, searchParams, status, type },
       }),
       providesTags: [tagTypes.user],
     }),
