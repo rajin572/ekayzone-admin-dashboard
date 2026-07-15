@@ -8,3 +8,4 @@ export * from "./promotion.type";
 export * from "./communication.type";
 export * from "./category.type";
 export * from "./disputesReports.type";
+export * from "./feedback.type";

@@ -83,10 +83,10 @@ const ReportDetailSheet = ({ open, onClose, report }: ReportDetailSheetProps) =>
                 <Button variant="outline" onClick={() => handleDismiss(report)}>
                   Dismiss
                 </Button>
-                <Button variant="outline" onClick={() => handleWarnCreator(report)}>
+                <Button variant="outline" className="border-warning text-warning" onClick={() => handleWarnCreator(report)}>
                   Warn Creator
                 </Button>
-                <Button variant="outline" onClick={() => handleRemoveContent(report)}>
+                <Button variant="outline" className="border-error text-error" onClick={() => handleRemoveContent(report)}>
                   Remove Content
                 </Button>
                 <Button

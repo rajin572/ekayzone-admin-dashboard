@@ -33,7 +33,7 @@ function ReusableSheet({
     children,
     footer,
     side = "right",
-    width = "sm:max-w-md",
+    width = "sm:max-w-xl",
 }: ReusableSheetProps) {
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
