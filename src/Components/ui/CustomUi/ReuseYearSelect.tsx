@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 import {
     Select,
     SelectContent,
@@ -28,7 +29,7 @@ const YearOption: React.FC<YearOptionProps> = ({
     const defaultYear = currentYear.toString();
 
     useEffect(() => {
-        const startYear = 2025;
+        const startYear = 2026;
         const yearRange: YearOption[] = [];
 
         // Add the years to the list
@@ -42,16 +43,19 @@ const YearOption: React.FC<YearOptionProps> = ({
     return (
         <Select defaultValue={defaultYear} onValueChange={setThisYear}>
             <SelectTrigger
-                className={`w-25 bg-[#0A1A2F] text-white border-[#0A1A2F] hover:bg-[#0A1A2F]/90 focus:ring-[#0A1A2F] ${className}`}
+                className={cn(
+                    "w-24 bg-secondary-color text-white border-secondary-color hover:bg-secondary-color/90 focus:ring-secondary-color",
+                    className
+                )}
             >
                 <SelectValue placeholder="Select year" />
             </SelectTrigger>
-            <SelectContent className="bg-white border-[#0A1A2F]">
+            <SelectContent className="bg-white border-border">
                 {yearOptions.map((option) => (
                     <SelectItem
                         key={option.value}
                         value={option.value}
-                        className="hover:bg-[#0A1A2F]/10 focus:bg-[#0A1A2F] focus:text-white"
+                        className="focus:bg-secondary-color focus:text-white"
                     >
                         {option.label}
                     </SelectItem>

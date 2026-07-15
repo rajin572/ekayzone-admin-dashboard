@@ -1,82 +1,62 @@
-export interface IDashboardStats {
-  totalRevenue: number;
-  totalBookings: number;
-  activeUsers: number;
+export interface IOverviewStats {
+  totalUsers: number;
+  activeToday: number;
+  totalSubscribers: number;
+  totalVideos: number;
   totalListings: number;
+  overallRevenue: number;
+  activeCampaigns: number;
+  openTickets: number;
 }
 
-export interface IRevenueBookingsTrendPoint {
+export interface IUserOverviewPoint {
   month: string;
-  Revenue: number;
+  users: number;
 }
 
-export interface ITransportDistributionItem {
-  category: string;
-  percentage: number;
+export interface IEarningOverviewPoint {
+  month: string;
+  earnings: number;
 }
 
-export type VerificationFileStatus = "completed" | "pending";
+export type RecentUserPlan = "Free" | "Premium" | "Pro";
+export type RecentUserStatus = "Active" | "Suspended" | "Banned";
 
-export interface IPendingVerificationFile {
-  name: string;
-  status: VerificationFileStatus;
-}
-
-export interface IPendingVerification {
+export interface IRecentUser {
   _id: string;
-  ownerName: string;
-  documentType: string;
-  submittedLabel: string;
-  files: IPendingVerificationFile[];
+  displayId: string;
+  fullName: string;
+  email: string;
+  gender: string;
+  phone: string;
+  age: number;
+  plan: RecentUserPlan;
+  status: RecentUserStatus;
+  username: string;
+  avatar?: string;
+  joinDate: string;
+  followers: number;
+  following: number;
+  activeCampaigns: number;
 }
 
-export type DashboardBookingStatus = "confirmed" | "pending" | "completed" | "cancelled";
-export type TransportType = "Boat" | "Air" | "Land";
-
-export interface IBookingTimelineEvent {
-  label: string;
-  dateLabel: string;
+export interface IOverviewData {
+  stats: IOverviewStats;
+  userOverview: IUserOverviewPoint[];
+  earningOverview: IEarningOverviewPoint[];
+  recentUsers: IRecentUser[];
 }
 
-export interface IRecentBooking {
-  _id: string;
-  bookingCode: string;
-  customerName: string;
-  customerEmail: string;
-  listingTitle: string;
-  transportType: TransportType;
-  featured: boolean;
-  amount: number;
-  status: DashboardBookingStatus;
-  bookingDate: string;
-  bookedDaysAgoLabel: string;
-  duration: string;
-  guests: number;
-  basePrice: number;
-  timeline: IBookingTimelineEvent[];
-}
-
-export interface ITopListing {
-  _id: string;
-  rank: number;
-  name: string;
-  bookings: number;
-  revenue: number;
-  rating: number;
-}
-
-export interface IDashboardOverviewData {
-  stats: IDashboardStats;
-  revenueBookingsTrend: IRevenueBookingsTrendPoint[];
-  transportDistribution: ITransportDistributionItem[];
-  pendingVerifications: IPendingVerification[];
-  recentBookings: IRecentBooking[];
-  topListings: ITopListing[];
-}
-
-export interface IGetDashboardOverviewResponse {
+export interface IGetOverviewResponse {
   success: boolean;
   statusCode: number;
   message: string;
-  data: IDashboardOverviewData;
+  data: IOverviewData;
+}
+
+export interface IGetEarningOverviewResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: IEarningOverviewPoint[];
 }

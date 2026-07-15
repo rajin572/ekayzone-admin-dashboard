@@ -1,323 +1,181 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import PageWraper from "@/Components/ui/CustomUi/PageWraper";
-import RevenueAreaChart from "@/Components/Charts/RevenueAreaChart";
-import CategorySplitChart from "@/Components/Charts/CategorySplitChart";
-import DashboardStatCards from "@/Components/Dashboard/Overview/DashboardStatCards";
-import PendingVerificationsCard from "@/Components/Dashboard/Overview/PendingVerificationsCard";
-import PendingVerificationReviewModal from "@/Components/Dashboard/Overview/PendingVerificationReviewModal";
-import RecentBookingsCard from "@/Components/Dashboard/Overview/RecentBookingsCard";
-import BookingDetailPreviewModal from "@/Components/Dashboard/Overview/BookingDetailPreviewModal";
-import TopListingsCard from "@/Components/Dashboard/Overview/TopListingsCard";
-import { IDashboardOverviewData, IPendingVerification, IRecentBooking } from "@/types";
-// import {
-//   useGetDashboardOverviewQuery,
-//   useApproveVerificationMutation,
-//   useRejectVerificationMutation,
-//   useConfirmBookingMutation,
-//   useCancelBookingMutation,
-// } from "@/redux/features/dashboard/dashboardApi";
+import { Eye } from "lucide-react";
+import ReusableTable, { Column } from "@/Components/ui/CustomUi/ReuseableTable";
+import YearOption from "@/Components/ui/CustomUi/ReuseYearSelect";
+import ConfirmModal from "@/Components/ui/CustomUi/Modal/ConfirmModal";
+import OverviewStatCards from "@/Components/Dashboard/Overview/OverviewStatCards";
+import UserOverviewAreaChart from "@/Components/Charts/UserOverviewAreaChart";
+import EarningOverviewBarChart from "@/Components/Charts/EarningOverviewBarChart";
+import RecentUserDetailModal from "@/Components/Dashboard/Overview/RecentUserDetailModal";
+import { IOverviewData, IRecentUser } from "@/types";
+// import { useGetDashboardOverviewQuery, useGetEarningOverviewQuery } from "@/redux/features/dashboard/dashboardApi";
+// import { useSuspendUserMutation } from "@/redux/features/user/userApi";
 // import tryCatchWrapper from "@/utils/tryCatchWrapper";
 
 // TODO: replace with real dashboard-overview API data once the endpoint exists.
-const DUMMY_OVERVIEW: IDashboardOverviewData = {
+const DUMMY_OVERVIEW: IOverviewData = {
   stats: {
-    totalRevenue: 1245000,
-    totalBookings: 2010,
-    activeUsers: 12458,
-    totalListings: 1847,
+    totalUsers: 12223,
+    activeToday: 4567,
+    totalSubscribers: 1222,
+    totalVideos: 12334,
+    totalListings: 12223,
+    overallRevenue: 4567,
+    activeCampaigns: 1222,
+    openTickets: 24,
   },
-  revenueBookingsTrend: [
-    { month: "Jan", Revenue: 118000 },
-    { month: "Feb", Revenue: 138000 },
-    { month: "Mar", Revenue: 152000 },
-    { month: "Apr", Revenue: 185000 },
-    { month: "May", Revenue: 228000 },
-    { month: "Jun", Revenue: 245000 },
+  userOverview: [
+    { month: "Jan", users: 600 },
+    { month: "Feb", users: 590 },
+    { month: "Mar", users: 615 },
+    { month: "Apr", users: 640 },
+    { month: "May", users: 620 },
+    { month: "Jun", users: 665 },
+    { month: "Jul", users: 645 },
+    { month: "Aug", users: 700 },
+    { month: "Sep", users: 720 },
+    { month: "Oct", users: 705 },
+    { month: "Nov", users: 760 },
+    { month: "Dec", users: 800 },
   ],
-  transportDistribution: [
-    { category: "Boats", percentage: 60 },
-    { category: "Aircraft", percentage: 40 },
+  earningOverview: [
+    { month: "Jan", earnings: 700 },
+    { month: "Feb", earnings: 850 },
+    { month: "Mar", earnings: 840 },
+    { month: "Apr", earnings: 550 },
+    { month: "May", earnings: 560 },
+    { month: "Jun", earnings: 720 },
+    { month: "Jul", earnings: 540 },
+    { month: "Aug", earnings: 820 },
+    { month: "Sep", earnings: 830 },
+    { month: "Oct", earnings: 840 },
+    { month: "Nov", earnings: 820 },
+    { month: "Dec", earnings: 690 },
   ],
-  pendingVerifications: [
-    {
-      _id: "1",
-      ownerName: "Marina Elite Ltd",
-      documentType: "Business License",
-      submittedLabel: "2 hours ago",
-      files: [
-        { name: "Boat License.JPG", status: "completed" },
-        { name: "Boat Registration.PDF", status: "completed" },
-        { name: "Inspection Report.PDF", status: "completed" },
-        { name: "Safety Compliance.PDF", status: "completed" },
-        { name: "Insurance Certificate.JPG", status: "completed" },
-      ],
-    },
-    {
-      _id: "2",
-      ownerName: "Luxury Air Services",
-      documentType: "Aircraft Certificate",
-      submittedLabel: "5 hours ago",
-      files: [
-        { name: "Airworthiness Certificate.PDF", status: "completed" },
-        { name: "Pilot License.JPG", status: "completed" },
-        { name: "Insurance Certificate.PDF", status: "completed" },
-      ],
-    },
-    {
-      _id: "3",
-      ownerName: "Premium Motors",
-      documentType: "Insurance Document",
-      submittedLabel: "1 day ago",
-      files: [
-        { name: "Insurance Policy.PDF", status: "completed" },
-        { name: "Vehicle Registration.PDF", status: "completed" },
-      ],
-    },
-    {
-      _id: "4",
-      ownerName: "Ocean Adventures",
-      documentType: "Captain License",
-      submittedLabel: "2 days ago",
-      files: [
-        { name: "Captain License.JPG", status: "completed" },
-        { name: "Safety Training Certificate.PDF", status: "completed" },
-      ],
-    },
-  ],
-  recentBookings: [
-    {
-      _id: "1",
-      bookingCode: "BK-10234",
-      customerName: "John Smith",
-      customerEmail: "john.smith@example.com",
-      listingTitle: "Luxury Yacht - Mediterranean",
-      transportType: "Boat",
-      featured: true,
-      amount: 12500,
-      status: "confirmed",
-      bookingDate: "2026-05-20",
-      bookedDaysAgoLabel: "Booked 3 days ago",
-      duration: "3 Days",
-      guests: 4,
-      basePrice: 12500,
-      timeline: [
-        { label: "Booking Created", dateLabel: "2026-05-20 at 10:30 AM" },
-        { label: "Payment Received", dateLabel: "2026-05-20 at 10:32 AM" },
-        { label: "Booking Confirmed", dateLabel: "2026-05-20 at 10:35 AM" },
-      ],
-    },
-    {
-      _id: "2",
-      bookingCode: "BK-10233",
-      customerName: "Sarah Johnson",
-      customerEmail: "sarah.johnson@example.com",
-      listingTitle: "Private Jet - Gulfstream G650",
-      transportType: "Air",
-      featured: true,
-      amount: 45000,
-      status: "pending",
-      bookingDate: "2026-05-22",
-      bookedDaysAgoLabel: "Booked 3 days ago",
-      duration: "3 Days",
-      guests: 4,
-      basePrice: 45000,
-      timeline: [
-        { label: "Booking Created", dateLabel: "2026-05-22 at 10:30 AM" },
-        { label: "Payment Received", dateLabel: "2026-05-22 at 10:32 AM" },
-      ],
-    },
-    {
-      _id: "3",
-      bookingCode: "BK-10232",
-      customerName: "Michael Chen",
-      customerEmail: "michael.chen@example.com",
-      listingTitle: "Lamborghini Aventador",
-      transportType: "Land",
-      featured: false,
-      amount: 3200,
-      status: "confirmed",
-      bookingDate: "2026-05-19",
-      bookedDaysAgoLabel: "Booked 4 days ago",
-      duration: "1 Day",
-      guests: 2,
-      basePrice: 3200,
-      timeline: [
-        { label: "Booking Created", dateLabel: "2026-05-19 at 09:15 AM" },
-        { label: "Payment Received", dateLabel: "2026-05-19 at 09:18 AM" },
-        { label: "Booking Confirmed", dateLabel: "2026-05-19 at 09:20 AM" },
-      ],
-    },
-    {
-      _id: "4",
-      bookingCode: "BK-10231",
-      customerName: "Emma Davis",
-      customerEmail: "emma.davis@example.com",
-      listingTitle: "Catamaran - Caribbean",
-      transportType: "Boat",
-      featured: true,
-      amount: 8750,
-      status: "completed",
-      bookingDate: "2026-05-15",
-      bookedDaysAgoLabel: "Booked 3 days ago",
-      duration: "3 Days",
-      guests: 4,
-      basePrice: 8750,
-      timeline: [
-        { label: "Booking Created", dateLabel: "2026-05-15 at 10:30 AM" },
-        { label: "Payment Received", dateLabel: "2026-05-15 at 10:32 AM" },
-      ],
-    },
-    {
-      _id: "5",
-      bookingCode: "BK-10230",
-      customerName: "David Wilson",
-      customerEmail: "david.wilson@example.com",
-      listingTitle: "Helicopter Tour",
-      transportType: "Air",
-      featured: true,
-      amount: 2800,
-      status: "cancelled",
-      bookingDate: "2026-05-14",
-      bookedDaysAgoLabel: "Booked 3 days ago",
-      duration: "3 Days",
-      guests: 4,
-      basePrice: 2800,
-      timeline: [
-        { label: "Booking Created", dateLabel: "2026-05-14 at 10:30 AM" },
-        { label: "Payment Received", dateLabel: "2026-05-14 at 10:32 AM" },
-      ],
-    },
-  ],
-  topListings: [
-    { _id: "1", rank: 1, name: "Sunseeker 88 Yacht", bookings: 45, revenue: 562500, rating: 4.9 },
-    { _id: "2", rank: 2, name: "Gulfstream G650", bookings: 38, revenue: 1710000, rating: 5.0 },
-    { _id: "3", rank: 3, name: "Ferrari 812 Superfast", bookings: 67, revenue: 214400, rating: 4.8 },
-    { _id: "4", rank: 4, name: "Lagoon 450 Catamaran", bookings: 29, revenue: 187200, rating: 4.7 },
+  recentUsers: [
+    { _id: "1", displayId: "2345", fullName: "Nina Collin", email: "ninacollin@example.com", gender: "Female", phone: "+32473256842", age: 32, plan: "Free", status: "Active", username: "i'mnina", joinDate: "2023-06-15", followers: 1000, following: 100, activeCampaigns: 10 },
+    { _id: "2", displayId: "2345", fullName: "Thomas De Smet", email: "220thomas.desmet@mail.be", gender: "Male", phone: "+32473256842", age: 32, plan: "Free", status: "Active", username: "thomasds", joinDate: "2023-04-02", followers: 820, following: 145, activeCampaigns: 6 },
+    { _id: "3", displayId: "2345", fullName: "Nina Collin", email: "ninacollin@example.com", gender: "Female", phone: "+32473256842", age: 32, plan: "Free", status: "Active", username: "i'mnina", joinDate: "2023-06-15", followers: 1000, following: 100, activeCampaigns: 10 },
+    { _id: "4", displayId: "2345", fullName: "Nina Collin", email: "ninacollin@example.com", gender: "Female", phone: "+32473256842", age: 32, plan: "Free", status: "Active", username: "i'mnina", joinDate: "2023-06-15", followers: 1000, following: 100, activeCampaigns: 10 },
+    { _id: "5", displayId: "2345", fullName: "Nina Collin", email: "ninacollin@example.com", gender: "Female", phone: "+32473256842", age: 32, plan: "Free", status: "Active", username: "i'mnina", joinDate: "2023-06-15", followers: 1000, following: 100, activeCampaigns: 10 },
+    { _id: "6", displayId: "2345", fullName: "Nina Collin", email: "ninacollin@example.com", gender: "Female", phone: "+32473256842", age: 32, plan: "Free", status: "Active", username: "i'mnina", joinDate: "2023-06-15", followers: 1000, following: 100, activeCampaigns: 10 },
+    { _id: "7", displayId: "2345", fullName: "Nina Collin", email: "ninacollin@example.com", gender: "Female", phone: "+32473256842", age: 32, plan: "Free", status: "Active", username: "i'mnina", joinDate: "2023-06-15", followers: 1000, following: 100, activeCampaigns: 10 },
   ],
 };
 
+const headerCls = "text-sm font-semibold text-base-color";
+const cellCls = "text-sm text-base-color";
+
 const OverviewPage = () => {
-  const navigate = useNavigate();
-
-  const [selectedVerification, setSelectedVerification] = useState<IPendingVerification | null>(null);
-  const [isVerificationOpen, setIsVerificationOpen] = useState(false);
-
-  const [selectedBooking, setSelectedBooking] = useState<IRecentBooking | null>(null);
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const currentYear = new Date().getFullYear();
+  const [earningYear, setEarningYear] = useState(currentYear);
+  console.log("Earning Year:", earningYear)
+  const [selectedUser, setSelectedUser] = useState<IRecentUser | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isSuspendConfirmOpen, setIsSuspendConfirmOpen] = useState(false);
 
   // const { data } = useGetDashboardOverviewQuery();
   // const overview = data?.data;
   const overview = DUMMY_OVERVIEW;
 
-  // const [approveVerification] = useApproveVerificationMutation();
-  const handleApproveVerification = async (_verification: IPendingVerification) => {
-    // const res = await tryCatchWrapper(
-    //   approveVerification,
-    //   { params: { id: _verification._id } },
-    //   { toastLoadingMessage: "Approving document..." }
-    // );
-    // if (res?.success) {
-    setIsVerificationOpen(false);
-    // }
+  // The year selector refetches only the earning chart once the endpoint exists:
+  // const { data: earningData } = useGetEarningOverviewQuery({ year: earningYear });
+  // const earningOverview = earningData?.data ?? overview.earningOverview;
+  const earningOverview = overview.earningOverview;
+
+  const handleSuspendClick = (user: IRecentUser) => {
+    setSelectedUser(user);
+    setIsDetailOpen(false);
+    setIsSuspendConfirmOpen(true);
   };
 
-  // const [rejectVerification] = useRejectVerificationMutation();
-  const handleRejectVerification = async (_verification: IPendingVerification) => {
+  // const [suspendUser] = useSuspendUserMutation();
+  const handleConfirmSuspend = async (_user: IRecentUser, _reason?: string) => {
     // const res = await tryCatchWrapper(
-    //   rejectVerification,
-    //   { params: { id: _verification._id }, body: {} },
-    //   { toastLoadingMessage: "Rejecting document..." }
+    //   suspendUser,
+    //   { params: { id: _user._id }, body: { reason: _reason } },
+    //   { toastLoadingMessage: "Suspending user..." }
     // );
-    // if (res?.success) {
-    setIsVerificationOpen(false);
-    // }
+    // if (res?.success) setIsSuspendConfirmOpen(false);
+    setIsSuspendConfirmOpen(false);
   };
 
-  const handleContactCustomer = (booking: IRecentBooking) => {
-    window.location.href = `mailto:${booking.customerEmail}`;
-  };
-
-  // const [confirmBooking] = useConfirmBookingMutation();
-  const handleConfirmBooking = async (_booking: IRecentBooking) => {
-    // const res = await tryCatchWrapper(
-    //   confirmBooking,
-    //   { params: { id: _booking._id } },
-    //   { toastLoadingMessage: "Confirming booking..." }
-    // );
-    // if (res?.success) {
-    setIsBookingOpen(false);
-    // }
-  };
-
-  // const [cancelBooking] = useCancelBookingMutation();
-  const handleCancelBooking = async (_booking: IRecentBooking) => {
-    // const res = await tryCatchWrapper(
-    //   cancelBooking,
-    //   { params: { id: _booking._id } },
-    //   { toastLoadingMessage: "Cancelling booking..." }
-    // );
-    // if (res?.success) {
-    setIsBookingOpen(false);
-    // }
-  };
+  const columns: Column<IRecentUser>[] = [
+    { header: "ID", accessorKey: "displayId", headerClassName: headerCls, cellClassName: cellCls },
+    { header: "Full Name", accessorKey: "fullName", headerClassName: headerCls, cellClassName: cellCls },
+    { header: "Email", accessorKey: "email", headerClassName: headerCls, cellClassName: cellCls },
+    { header: "Gender", accessorKey: "gender", headerClassName: headerCls, cellClassName: cellCls },
+    { header: "Phone Number", accessorKey: "phone", headerClassName: headerCls, cellClassName: cellCls },
+    { header: "Age", accessorKey: "age", headerClassName: headerCls, cellClassName: cellCls },
+    { header: "Plan", accessorKey: "plan", headerClassName: headerCls, cellClassName: cellCls },
+    { header: "Status", accessorKey: "status", headerClassName: headerCls, cellClassName: cellCls },
+    {
+      header: "Action",
+      accessorKey: "_id",
+      headerClassName: headerCls,
+      cellClassName: cellCls,
+      render: (_, row) => (
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedUser(row);
+            setIsDetailOpen(true);
+          }}
+          className="p-1 rounded-md hover:bg-muted transition-colors cursor-pointer"
+          aria-label={`View ${row.fullName}`}
+        >
+          <Eye className="size-5 text-base-color" />
+        </button>
+      ),
+    },
+  ];
 
   return (
-    <PageWraper title="Dashboard Overview" description="Monitor your platform performance and key metrics">
-      <DashboardStatCards stats={overview.stats} />
+    <section className="p-6 md:p-8 space-y-6">
+      <OverviewStatCards stats={overview.stats} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-border shadow-sm p-5">
-          <h2 className="text-base font-semibold text-base-color">Revenue & Bookings Trend</h2>
-          <p className="text-sm text-secondbase-color mb-2">Last 6 months performance</p>
-          <RevenueAreaChart data={overview.revenueBookingsTrend} color="#6366f1" />
+        <div className="bg-primary-color rounded-lg border border-base-color/10 p-5 shadow-sm">
+          <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-base-color mb-4">User Overview</h2>
+          <UserOverviewAreaChart data={overview.userOverview} />
         </div>
 
-        <div className="bg-white rounded-xl border border-border shadow-sm p-5">
-          <h2 className="text-base font-semibold text-base-color">Transport Distribution</h2>
-          <p className="text-sm text-secondbase-color mb-2">Booking by category</p>
-          <CategorySplitChart data={overview.transportDistribution} />
+        <div className="bg-primary-color rounded-lg border border-base-color/10 p-5 shadow-sm">
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-base-color">Earning Overview</h2>
+            <YearOption currentYear={currentYear} setThisYear={(y) => setEarningYear(Number(y))} />
+          </div>
+          <EarningOverviewBarChart data={earningOverview} />
         </div>
       </div>
 
-      <PendingVerificationsCard
-        verifications={overview.pendingVerifications}
-        onViewAll={() => navigate("/admin/owner-management")}
-        onReview={(verification) => {
-          setSelectedVerification(verification);
-          setIsVerificationOpen(true);
-        }}
-      />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentBookingsCard
-          bookings={overview.recentBookings}
-          onView={(booking) => {
-            setSelectedBooking(booking);
-            setIsBookingOpen(true);
-          }}
-        />
-
-        <TopListingsCard listings={overview.topListings} />
+      <div>
+        <h2 className="text-base sm:text-lg lg:text-xl font-bold text-base-color mb-4">Recent Users</h2>
+        <ReusableTable data={overview.recentUsers} columns={columns} scroll={false} />
       </div>
 
-      <PendingVerificationReviewModal
-        open={isVerificationOpen}
-        onClose={() => setIsVerificationOpen(false)}
-        verification={selectedVerification}
-        onApprove={handleApproveVerification}
-        onReject={handleRejectVerification}
+      <RecentUserDetailModal
+        open={isDetailOpen}
+        onClose={() => setIsDetailOpen(false)}
+        user={selectedUser}
+        onSuspend={handleSuspendClick}
       />
 
-      <BookingDetailPreviewModal
-        open={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
-        booking={selectedBooking}
-        onContactCustomer={handleContactCustomer}
-        onConfirm={handleConfirmBooking}
-        onCancel={handleCancelBooking}
+      <ConfirmModal<IRecentUser>
+        open={isSuspendConfirmOpen}
+        onCancel={() => setIsSuspendConfirmOpen(false)}
+        currentRecord={selectedUser}
+        onConfirm={handleConfirmSuspend}
+        title="Suspend User"
+        description={`Temporarily suspend ${selectedUser?.fullName} from the platform`}
+        confirmText="Suspend User"
+        cancelText="Cancel"
+        variant="warning"
+        withReason
+        reasonLabel="Reason for Suspension"
+        reasonRequired
       />
-    </PageWraper>
+    </section>
   );
 };
 
