@@ -170,8 +170,8 @@ export const FormInput: FormControlFunc<{
   );
 };
 
-export const FormTextarea: FormControlFunc<{ prefix?: ReactNode; suffix?: ReactNode; inputClassName?: string }> = (props) => {
-  const { prefix, suffix, inputClassName, ...restProps } = props;
+export const FormTextarea: FormControlFunc<{ prefix?: ReactNode; suffix?: ReactNode; inputClassName?: string; placeholder?: string }> = (props) => {
+  const { prefix, suffix, inputClassName, placeholder, ...restProps } = props;
 
   return (
     <FormBase {...restProps}>
@@ -189,6 +189,7 @@ export const FormTextarea: FormControlFunc<{ prefix?: ReactNode; suffix?: ReactN
               suffix && "pr-10",
               inputClassName
             )}
+            placeholder={placeholder}
             {...field}
           />
           {suffix && (
@@ -446,6 +447,8 @@ export const FormDatePicker: FormControlFunc<{
   formatString?: string;
   startMonth?: Date;
   endMonth?: Date;
+  /** "calendar" (default) = calendar icon on the left; "chevron" = select-style trigger with a chevron on the right */
+  icon?: "calendar" | "chevron";
 }> = ({
   placeholder = "Pick a date",
   disablePast = false,
@@ -453,6 +456,7 @@ export const FormDatePicker: FormControlFunc<{
   formatString = "PPP",
   startMonth,
   endMonth,
+  icon = "calendar",
   ...props
 }) => {
     const today = new Date();
@@ -485,13 +489,21 @@ export const FormDatePicker: FormControlFunc<{
                 aria-invalid={ariaInvalid}
                 className={cn(
                   "w-full h-9 flex items-center gap-2 px-3 py-2 text-base rounded-md border border-base-color/30 bg-primary-color shadow text-left",
+                  icon === "chevron" && "justify-between",
                   "focus:outline-none focus:border-base-color/70",
                   "aria-invalid:border-destructive",
                   !value && "text-base-color/50"
                 )}
               >
-                <CalendarIcon className="size-4 shrink-0 text-muted-foreground" />
-                {value ? format(value as Date, formatString) : placeholder}
+                {icon === "calendar" && (
+                  <CalendarIcon className="size-4 shrink-0 text-muted-foreground" />
+                )}
+                <span className={icon === "chevron" ? "flex-1 truncate" : undefined}>
+                  {value ? format(value as Date, formatString) : placeholder}
+                </span>
+                {icon === "chevron" && (
+                  <ChevronDownIcon className="size-4 shrink-0 opacity-50" />
+                )}
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">

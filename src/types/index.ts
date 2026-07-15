@@ -5,3 +5,4 @@ export * from "./dashboard.type";
 export * from "./marketplace.type";
 export * from "./revenue.type";
 export * from "./promotion.type";
+export * from "./communication.type";
