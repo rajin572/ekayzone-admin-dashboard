@@ -3,3 +3,4 @@ export * from "./common.type";
 export * from "./user.type";
 export * from "./dashboard.type";
 export * from "./marketplace.type";
+export * from "./revenue.type";
