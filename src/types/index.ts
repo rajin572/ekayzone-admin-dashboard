@@ -6,3 +6,4 @@ export * from "./marketplace.type";
 export * from "./revenue.type";
 export * from "./promotion.type";
 export * from "./communication.type";
+export * from "./category.type";

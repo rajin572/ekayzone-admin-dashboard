@@ -363,7 +363,8 @@ export const FormSwitch: FormControlFunc = (props) => {
 export const FormUpload: FormControlFunc<{
   maxFiles?: number;
   accept?: string;
-}> = ({ maxFiles = 5, accept = "image/*", ...props }) => {
+  hint?: ReactNode;
+}> = ({ maxFiles = 5, accept = "image/*", hint, ...props }) => {
   return (
     <FormBase {...props}>
       {({ onChange, value, ...field }) => (
@@ -371,6 +372,7 @@ export const FormUpload: FormControlFunc<{
           {...field}
           maxFiles={maxFiles}
           accept={accept}
+          hint={hint}
           value={value || []}
           onChange={onChange}
         />

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { ReactNode, useRef } from "react";
 import { Upload, File } from "lucide-react";
 import { ImagePreview } from "../ReuseImagePreview";
 import { MdDelete } from "react-icons/md";
@@ -15,6 +15,8 @@ interface FileUploadProps {
     accept?: string;
     className?: string;
     "aria-invalid"?: boolean;
+    /** Overrides the default "{n}/{maxFiles} files uploaded" hint line, e.g. "SVG or PNG" */
+    hint?: ReactNode;
 }
 
 export const FileUpload = ({
@@ -23,6 +25,7 @@ export const FileUpload = ({
     maxFiles = 5,
     accept = "image/*",
     className = "",
+    hint,
 }: FileUploadProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -77,10 +80,10 @@ export const FileUpload = ({
             >
                 <Upload className="size-8 mb-2 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
-                    Click to upload or drag and drop
+                    <span className="text-secondary-color font-medium">Click to upload</span> or drag and drop
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                    {value.length}/{maxFiles} files uploaded
+                    {hint ?? `${value.length}/${maxFiles} files uploaded`}
                 </p>
             </button>
 
