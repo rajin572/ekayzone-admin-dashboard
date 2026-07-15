@@ -1,0 +1,43 @@
+import { ReactNode } from "react";
+import { AllImages } from "@/assets/AllImages";
+
+interface AuthLayoutProps {
+  subtitle: string;
+  cardTitle: string;
+  cardDescription: string;
+  children: ReactNode;
+}
+
+const AuthLayout = ({ subtitle, cardTitle, cardDescription, children }: AuthLayoutProps) => {
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center w-full bg-[#F8F9FB]"
+      style={{
+        backgroundImage:
+          "radial-gradient(60% 55% at 15% 10%, rgba(65, 105, 225, 0.10) 0%, rgba(65, 105, 225, 0) 60%), radial-gradient(55% 50% at 90% 95%, rgba(107, 140, 255, 0.12) 0%, rgba(107, 140, 255, 0) 60%)",
+      }}
+    >
+      <div className="w-full mx-auto px-4 py-8 max-w-sm sm:max-w-md">
+        <div className="flex flex-col items-center gap-6">
+          <div className="flex flex-col items-center gap-1 text-center">
+            <img src={AllImages.logo} alt="eKayzone" className="h-10 sm:h-12 w-auto mb-2" />
+            <h1 className="text-xl sm:text-2xl font-bold text-base-color">Admin Portal</h1>
+            <p className="text-sm text-gray-500">{subtitle}</p>
+          </div>
+
+          <div className="w-full bg-white rounded-xl border border-border shadow-sm p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-base-color">{cardTitle}</h2>
+            <p className="text-sm text-gray-500 mt-1 mb-6">{cardDescription}</p>
+            {children}
+          </div>
+
+          <p className="text-xs text-gray-500">
+            &copy; {new Date().getFullYear()} eKayzone. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AuthLayout;
