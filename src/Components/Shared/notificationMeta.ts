@@ -12,18 +12,18 @@ export const notificationMeta: Record<NotificationType, { icon: LucideIcon; icon
 export const DUMMY_NOTIFICATIONS: INotificationItem[] = Array.from({ length: 26 }, (_, i) => {
   const template = [
     {
-      title: "New verification pending",
-      body: "Owner verification document submitted for review.",
+      title: "New seller verification pending",
+      body: "Seller verification documents submitted for review.",
       type: "verification" as NotificationType,
     },
     {
       title: "Dispute opened",
-      body: "Booking #12345 — customer complaint filed.",
+      body: 'Order dispute reported for "Hair Styling & Branding".',
       type: "dispute" as NotificationType,
     },
     {
       title: "Payment failed",
-      body: "Transaction #45785 requires attention.",
+      body: "Order #2345 payment of $700 could not be processed.",
       type: "payment" as NotificationType,
     },
   ][i % 3];
