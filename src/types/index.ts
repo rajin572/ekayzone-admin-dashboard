@@ -11,3 +11,4 @@ export * from "./disputesReports.type";
 export * from "./feedback.type";
 export * from "./profile.type";
 export * from "./support.type";
+export * from "./notification.type";

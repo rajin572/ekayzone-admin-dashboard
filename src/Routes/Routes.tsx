@@ -13,6 +13,7 @@ import ForgotPassword from "@/pages/Auth/ForgetPassword";
 import OTPVerify from "@/pages/Auth/OtpPage";
 import UpdatePassword from "@/pages/Auth/UpdatePassword";
 import NotFound from "@/Components/ui/CustomUi/NotFound/NotFound";
+import NotificationsPage from "@/pages/Notifications/NotificationsPage";
 // import useUserData from "@/hooks/useUserData";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -86,7 +87,11 @@ const router: RouteObject[] = [
         <DashboardLayout />
       </ProtectedRoute>
     ),
-    children: routeGenerator(adminRoutes),
+    children: [
+      ...routeGenerator(adminRoutes),
+      // Reachable only via the Topbar bell dropdown's "Show more" — deliberately not in the sidebar.
+      { path: "notifications", element: <NotificationsPage /> },
+    ],
   },
   // {
   //   path: "password-reset-success",

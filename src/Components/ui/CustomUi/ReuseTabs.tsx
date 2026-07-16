@@ -35,7 +35,7 @@ const ReuseTabs: React.FC<ReuseTabsProps> = ({ options, value, onChange, classNa
             variant === "default" &&
               (value === option.value
                 ? "bg-primary-color text-base-color shadow-sm"
-                : "text-secondbase-color hover:text-base-color"),
+                : "text-highlight hover:text-base-color"),
             variant === "solid" &&
               (value === option.value
                 ? "bg-secondary-color text-white"

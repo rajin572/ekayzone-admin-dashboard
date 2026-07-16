@@ -25,7 +25,7 @@ export function AppSidebar() {
     <Sidebar collapsible={"icon"} variant={"sidebar"}>
       <SidebarHeader className="overflow-hidden">
         <div className="flex items-start justify-center w-fit mx-auto">
-          <img src={AllImages.logo} alt="logo" className="max-w-40" />
+          <img src={AllImages.logo} alt="logo" className="max-w-50" />
         </div>
       </SidebarHeader>
       <SidebarContent>
